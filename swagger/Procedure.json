@@ -1,0 +1,297 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "DSTU3",
+    "title": "FHIR Procedure",
+    "description": "An action that is or was performed on or for a patient. This can be a physical intervention like an operation, or less invasive like long term services, counseling, or hypnotherapy. To get more details regarding this FHIR resource please visit https://www.hl7.org/fhir/procedure.html",
+    "contact": {
+      "name": "Axway",
+      "url": "https://www.axway.com"
+    },
+    "license": {
+      "name": "none"
+    }
+  },
+  "host": "api-env.demo.axway.com:9003",
+  "basePath": "/baseDstu3",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/Procedure/{id}/$validate": {
+      "get": {
+        "description": "Validate an instance of the resource to check whether it would be acceptable for creating/updating, without actually storing it on the server.",
+        "operationId": "validateProcedure",
+        "produces": [
+          "application/fhir+json"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            },
+            "description": "Procedure info"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status 200"
+          }
+        }
+      }
+    },
+    "/Procedure/{id}": {
+      "get": {
+        "description": "Retrieve procedure info by id",
+        "operationId": "getProcedureById",
+        "produces": [
+          "application/fhir+json"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status 200"
+          },
+          "404": {
+            "description": "Tried to get an unknown resource\n"
+          },
+          "410": {
+            "description": "Tried to get a deleted resource\n"
+          },
+          "422": {
+            "description": "Unprocessable Entity - the proposed resource violated applicable FHIR  profiles or server business rules.  This should be accompanied by an OperationOutcome resource providing additional detail.\n"
+          }
+        }
+      },
+      "put": {
+        "description": "Update an existing resource\n",
+        "operationId": "putProcedureById",
+        "consumes": [
+          "application/fhir+json"
+        ],
+        "produces": [
+          "application/fhir+json"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            },
+            "description": "Procedure info"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesfully updated the instance \n"
+          },
+          "201": {
+            "description": "Succesfully created the instance \n"
+          },
+          "400": {
+            "description": "Bad Request - Resource cound not be parsed or failed basic FHIR validation rules\n"
+          },
+          "404": {
+            "description": "Not Found - resource type not support, or not a FHIR validation rules\n"
+          },
+          "405": {
+            "description": "Method Not allowed - the resource did not exist prior to the update, and the server does not allow client defined ids\n"
+          },
+          "409": {
+            "description": "Version conflict management\n"
+          },
+          "412": {
+            "description": "Version conflict management\n"
+          },
+          "422": {
+            "description": "Unprocessable Entity - the proposed resource violated applicable FHIR  profiles or server business rules.  This should be accompanied by an OperationOutcome resource providing additional detail.\n"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete procedure by Id\n",
+        "operationId": "deleteProcedureById",
+        "produces": [
+          "application/fhir+json"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Succesfully deleted resource\n"
+          },
+          "404": {
+            "description": "Not Found - resource was not found\n"
+          },
+          "405": {
+            "description": "Method Not allowed - delete is not allowed\n"
+          }
+        }
+      }
+    },
+    "/Procedure": {
+      "get": {
+        "description": "Get All Procedures",
+        "operationId": "getAllProcedures",
+        "produces": [
+          "application/fhir+json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Status 200",
+            "examples": {
+              "application/json": {},
+              "new": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "patient",
+            "type": "string",
+            "description": "patient id"
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "type": "array",
+            "description": "performed date e.g. 2019-01-20",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "description": "Create a new Procedure resource\n",
+        "operationId": "postProcedureById",
+        "consumes": [
+          "application/fhir+json"
+        ],
+        "produces": [
+          "application/fhir+json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Succesfully created a new type\n",
+            "examples": {
+              "application/json": {
+                "resourceType": "Procedure",
+                "id": "9999",
+                "meta": {
+                  "versionId": "1",
+                  "lastUpdated": "2019-01-31T19:45:22.022+00:00"
+                },
+                "status": "completed",
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://axway.com/sct",
+                      "code": "16335031000119104",
+                      "display": "High resolution computed tomography of chest without contrast (procedure)"
+                    }
+                  ],
+                  "text": "High resolution computed tomography of chest without contrast (procedure)"
+                },
+                "subject": {
+                  "reference": "Patient/9999"
+                },
+                "encounter": {
+                  "reference": "Encounter/9999"
+                },
+                "performedPeriod": {
+                  "start": "2010-06-29T12:55:26-07:00",
+                  "end": "2010-06-29T13:25:26-07:00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Resource cound not be parsed or failed basic FHIR validation rules\n"
+          },
+          "404": {
+            "description": "Not Found - resource type not support, or not a FHIR validation rules\n"
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            },
+            "description": "Procedure info"
+          }
+        ]
+      }
+    },
+    "/Procedure/_tags": {
+      "get": {
+        "description": "Get a list of tags used for the nominated resource type\n",
+        "operationId": "tags",
+        "produces": [
+          "application/fhir+json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesfully retrieved resource\n"
+          }
+        }
+      }
+    },
+    "/Procedure/{id}/_history": {
+      "get": {
+        "description": "Retrieve the update history across the Procedure resource type, or against a specific instance of this resource type if an ID is specified.",
+        "operationId": "getProcedureHistoryById",
+        "produces": [
+          "application/fhir+json"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status 200"
+          }
+        }
+      }
+    }
+  }
+}
