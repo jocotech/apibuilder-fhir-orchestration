@@ -1,3 +1,9 @@
+# This API Builder project covers how to create an API flow that orchestrates several FHIR resources.
+
+FHIR connectors are automatically configure based on the swaggers docs that are included in the swagger directory.
+Medical Info API will utilize the FHIR REST API Connectors to orchestrate the responses.
+
+
 # Welcome to API Builder Service
 
 For more information on using API Builder please see the [API Builder Getting Started Guide](https://docs.axway.com/bundle/API_Builder_4x_allOS_en/page/api_builder_getting_started_guide.html).
