@@ -1,7 +1,11 @@
-# This API Builder project covers how to create an API flow that orchestrates several FHIR resources.
+# FHIR Orchestration use case
+This API Builder project implements a Medical Info which orchestrates FHIR APIs (patient's demographics and condition info) and non FHIR based data source (patient's procedure from RDBMS).
 
-FHIR connectors are automatically configure based on the swaggers docs that are included in the swagger directory.
-Medical Info API will utilize the FHIR REST API Connectors to orchestrate the responses.
+FHIR REST connectors are automatically configured based on the swaggers docs that are included in the swagger directory.
+MySql connector is installed in this project.
+
+![](https://i.imgur.com/4zqlDuW.jpg)
+
 
 
 # Welcome to API Builder Service
