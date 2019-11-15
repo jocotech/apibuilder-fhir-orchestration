@@ -101,7 +101,7 @@ module.exports = {
 			// schemes: [ 'https' ],
 
 			// The host (name or ip) serving the service. This MUST be the host only and does not include the scheme nor sub-paths. It MAY include a port.
-			 host: 'localhost:8084',
+			 host: 'api-env.demo.axway.com:8084',
 
 			// The base path on which the service is served relative to the host.
 			// If provided, this MUST start with a leading slash, or be null to specify no basePath

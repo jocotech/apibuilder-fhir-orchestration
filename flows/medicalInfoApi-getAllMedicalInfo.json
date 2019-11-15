@@ -34,7 +34,7 @@
 	"nodes": {
 		"condition.1": {
 			"type": "nodehandler://axway-flow/condition",
-			"name": "Chk Id",
+			"name": "Id Exists",
 			"method": "exists",
 			"parameters": [
 				{
@@ -62,6 +62,149 @@
 				}
 			},
 			"metaMethod": "Exists"
+		},
+		"Patient.1": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-swagger/Patient",
+			"name": "getPatientById",
+			"method": "getPatientById",
+			"parameters": [
+				{
+					"name": "id",
+					"type": "jsonpath",
+					"value": "$.params.patientId",
+					"metaName": "id"
+				}
+			],
+			"outputs": {
+				"200": {
+					"routes": [
+						"Condition.1"
+					],
+					"context": "$.resp_patient",
+					"metaName": "200"
+				},
+				"default": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "Default"
+				},
+				"error": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.error",
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "getPatientById"
+		},
+		"Condition.1": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-swagger/Condition",
+			"name": "getAllConditions",
+			"method": "getAllConditions",
+			"parameters": [
+				{
+					"name": "patient",
+					"type": "jsonpath",
+					"value": "$.params.patientId",
+					"metaName": "patient",
+					"metaDescription": "patient id"
+				}
+			],
+			"outputs": {
+				"200": {
+					"routes": [
+						"procedures.1"
+					],
+					"context": "$.resp_condition",
+					"metaName": "200"
+				},
+				"default": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.response",
+					"metaName": "Default"
+				},
+				"error": {
+					"routes": [
+						"http.2"
+					],
+					"context": "$.error",
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "getAllConditions"
+		},
+		"procedures.1": {
+			"type": "nodehandler://api-builder-flow-invoke/model/mysql/procedures",
+			"name": "Find by ID",
+			"method": "findByID",
+			"parameters": [
+				{
+					"name": "patientId",
+					"type": "jsonpath",
+					"value": "$.params.patientId",
+					"metaName": "patientId"
+				}
+			],
+			"outputs": {
+				"next": {
+					"routes": [
+						"javascript.1"
+					],
+					"context": "$.foundByID",
+					"metaName": "Next"
+				},
+				"notfound": {
+					"routes": [
+						"http.2"
+					],
+					"metaName": "Not Found",
+					"context": "$"
+				}
+			},
+			"metaMethod": "Find by ID"
+		},
+		"javascript.1": {
+			"type": "nodehandler://@axway/api-builder-plugin-fn-javascript/javascript",
+			"name": "Combine Data",
+			"method": "Execute",
+			"parameters": [
+				{
+					"name": "data",
+					"type": "jsonpath",
+					"value": "$",
+					"metaName": "data",
+					"metaDescription": "The value to apply as the `data` argument to the javascript code.  For objects and arrays, `data` is passed by reference."
+				},
+				{
+					"name": "code",
+					"type": "string",
+					"value": "\"return {\\n  \\tid: data.params.patientId,\\n    patient:{ name: data.resp_patient.data.name},\\n    condition: data.resp_condition.data.entry,\\n    procedure:  data.foundByID\\n  };\"",
+					"metaName": "code",
+					"metaDescription": "A javascript function body. Supports `await` and returning promises"
+				}
+			],
+			"outputs": {
+				"next": {
+					"context": "$.result",
+					"routes": [
+						"http.1"
+					],
+					"metaName": "Next"
+				},
+				"error": {
+					"context": "$.error",
+					"routes": [
+						"http.2"
+					],
+					"metaName": "Error"
+				}
+			},
+			"metaMethod": "Execute"
 		},
 		"http.1": {
 			"type": "nodehandler://axway-flow/http",
@@ -113,157 +256,6 @@
 				}
 			},
 			"metaMethod": "Set HTTP Response"
-		},
-		"Condition.1": {
-			"type": "nodehandler://@axway/api-builder-plugin-fn-swagger/Condition",
-			"name": "getAllConditions",
-			"method": "getAllConditions",
-			"parameters": [
-				{
-					"name": "patient",
-					"type": "jsonpath",
-					"value": "$.params.patientId",
-					"metaName": "patient",
-					"metaDescription": "patient id"
-				}
-			],
-			"outputs": {
-				"200": {
-					"routes": [
-						"Procedure.1"
-					],
-					"context": "$.resp_condition",
-					"metaName": "200"
-				},
-				"default": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.response",
-					"metaName": "Default"
-				},
-				"error": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.error",
-					"metaName": "Error"
-				}
-			},
-			"metaMethod": "getAllConditions"
-		},
-		"Procedure.1": {
-			"type": "nodehandler://@axway/api-builder-plugin-fn-swagger/Procedure",
-			"name": "getAllProcedures",
-			"method": "getAllProcedures",
-			"parameters": [
-				{
-					"name": "patient",
-					"type": "jsonpath",
-					"value": "$.params.patientId",
-					"metaName": "patient",
-					"metaDescription": "patient id"
-				}
-			],
-			"outputs": {
-				"200": {
-					"routes": [
-						"javascript.1"
-					],
-					"context": "$.resp_procedure",
-					"metaName": "200"
-				},
-				"default": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.response",
-					"metaName": "Default"
-				},
-				"error": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.error",
-					"metaName": "Error"
-				}
-			},
-			"metaMethod": "getAllProcedures"
-		},
-		"javascript.1": {
-			"type": "nodehandler://@axway/api-builder-plugin-fn-javascript/javascript",
-			"name": "Combine data",
-			"method": "Execute",
-			"parameters": [
-				{
-					"name": "data",
-					"type": "jsonpath",
-					"value": "$",
-					"metaName": "data",
-					"metaDescription": "The value to apply as the `data` argument to the javascript code.  For objects and arrays, `data` is passed by reference."
-				},
-				{
-					"name": "code",
-					"type": "string",
-					"value": "\"return {\\n  patient: data.resp_patient.data,\\n  procedure:  data.resp_procedure.data.entry,\\n  condition:  data.resp_condition.data.entry\\n};\"",
-					"metaName": "code",
-					"metaDescription": "A javascript function body. Supports `await` and returning promises"
-				}
-			],
-			"outputs": {
-				"next": {
-					"context": "$.result",
-					"routes": [
-						"http.1"
-					],
-					"metaName": "Next"
-				},
-				"error": {
-					"context": "$.error",
-					"routes": [
-						"http.2"
-					],
-					"metaName": "Error"
-				}
-			},
-			"metaMethod": "Execute"
-		},
-		"Patient.1": {
-			"type": "nodehandler://@axway/api-builder-plugin-fn-swagger/Patient",
-			"name": "getPatientById",
-			"method": "getPatientById",
-			"parameters": [
-				{
-					"name": "id",
-					"type": "jsonpath",
-					"value": "$.params.patientId",
-					"metaName": "id"
-				}
-			],
-			"outputs": {
-				"200": {
-					"routes": [
-						"Condition.1"
-					],
-					"context": "$.resp_patient",
-					"metaName": "200"
-				},
-				"default": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.response",
-					"metaName": "Default"
-				},
-				"error": {
-					"routes": [
-						"http.2"
-					],
-					"context": "$.error",
-					"metaName": "Error"
-				}
-			},
-			"metaMethod": "getPatientById"
 		}
 	}
 }

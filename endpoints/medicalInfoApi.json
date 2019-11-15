@@ -3,13 +3,9 @@
   "info": {
     "title": "Medical Info API",
     "version": "1.0",
-    "description": "Aggregates all medical information by patient."
+    "description": "Aggregates all medical information by patient id."
   },
-  "host": "api-env.demo.axway.com:8080",
-  "basePath": "/v1",
-  "schemes": [
-    "http"
-  ],
+  "host": "api-env.demo.axway.com:8084",
   "paths": {
     "/MedicalInfo": {
       "get": {
@@ -20,10 +16,13 @@
               "type": "object",
               "properties": {}
             }
+          },
+          "500": {
+            "description": ""
           }
         },
-        "summary": "",
-        "description": "Get All Medical Info by patient.",
+        "description": "Get all medical information by patient id.",
+        "operationId": "getAllMedicalInfo",
         "parameters": [
           {
             "in": "query",
@@ -31,23 +30,14 @@
             "type": "string",
             "description": "patient id",
             "required": true
-          },
-          {
-            "in": "query",
-            "name": "startDate",
-            "type": "string",
-            "description": "start date (ccyy-mm-dd)"
-          },
-          {
-            "in": "query",
-            "name": "endDate",
-            "type": "string",
-            "description": "start date (ccyy-mm-dd)"
           }
         ],
-        "operationId": "getAllMedicalInfo",
         "x-flow": "medicalInfoApi-getAllMedicalInfo"
       }
     }
-  }
+  },
+  "basePath": "/v1",
+  "schemes": [
+    "http"
+  ]
 }
